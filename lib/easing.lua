@@ -390,13 +390,39 @@ local function outInBounce(t, b, c, d)
   end
 end
 
+
+--CUSTOM
+
+local function bezierCoord4Power (a0, a1, a2, a3, a4, t)
+  return (1-t)^4*a0 + 4*t*(1-t)^3*a1 + 6*t^2*(1-t)^2*a2 + 4*t^3*(1-t)*a3 + t^4*a4
+end
+
+function getCoordFun (P0, P1, P2, P3, P4, tInterval)
+  return function (t)
+    return bezierCoord4Power(P0[1], P1[1], P2[1], P3[1], P4[1], t/tInterval),
+      bezierCoord4Power(P0[2], P1[2], P2[2], P3[2], P4[2], t/tInterval)
+  end
+end
+
+function oscillate (t, b, c, d, e)
+  -- local b2t = (c-b)>0 no matter
+  if not e then e=5 end
+  local x = t/d
+  local A = (c-b)/2
+  local S = 2*e
+  local yOffset = (b+c)/2
+  -- x half-period from 0 to 1 (solid chunk), y from -A to A, S+1 = top and bottom vertices
+  return A * sin(pi*x) * cos(S*pi*x) + yOffset
+end
+
+
 return {
   linear = linear,
   inQuad = inQuad,
   outQuad = outQuad,
   inOutQuad = inOutQuad,
   outInQuad = outInQuad,
-  inCubic  = inCubic ,
+  inCubic  = inCubic,
   outCubic = outCubic,
   inOutCubic = inOutCubic,
   outInCubic = outInCubic,
@@ -432,4 +458,47 @@ return {
   outBounce = outBounce,
   inOutBounce = inOutBounce,
   outInBounce = outInBounce,
+  linearTo = function(t, b, e, d) return linear(t, b, e-b, d) end,
+  inQuadTo = function(t, b, e, d) return inQuad(t, b, e-b, d) end,
+  outQuadTo = function(t, b, e, d) return outQuad(t, b, e-b, d) end,
+  inOutQuadTo = function(t, b, e, d) return inOutQuad(t, b, e-b, d) end,
+  outInQuadTo = function(t, b, e, d) return outInQuad(t, b, e-b, d) end,
+  inCubicTo = function(t, b, e, d) return inCubic(t, b, e-b, d) end,
+  outCubicTo = function(t, b, e, d) return outCubic(t, b, e-b, d) end,
+  inOutCubicTo = function(t, b, e, d) return inOutCubic(t, b, e-b, d) end,
+  outInCubicTo = function(t, b, e, d) return outInCubic(t, b, e-b, d) end,
+  inQuartTo = function(t, b, e, d) return inQuart(t, b, e-b, d) end,
+  outQuartTo = function(t, b, e, d) return outQuart(t, b, e-b, d) end,
+  inOutQuartTo = function(t, b, e, d) return inOutQuart(t, b, e-b, d) end,
+  outInQuartTo = function(t, b, e, d) return outInQuart(t, b, e-b, d) end,
+  inQuintTo = function(t, b, e, d) return inQuint(t, b, e-b, d) end,
+  outQuintTo = function(t, b, e, d) return outQuint(t, b, e-b, d) end,
+  inOutQuintTo = function(t, b, e, d) return inOutQuint(t, b, e-b, d) end,
+  outInQuintTo = function(t, b, e, d) return outInQuint(t, b, e-b, d) end,
+  inSineTo = function(t, b, e, d) return inSine(t, b, e-b, d) end,
+  outSineTo = function(t, b, e, d) return outSine(t, b, e-b, d) end,
+  inOutSineTo = function(t, b, e, d) return inOutSine(t, b, e-b, d) end,
+  outInSineTo = function(t, b, e, d) return outInSine(t, b, e-b, d) end,
+  inExpoTo = function(t, b, e, d) return inExpo(t, b, e-b, d) end,
+  outExpoTo = function(t, b, e, d) return outExpo(t, b, e-b, d) end,
+  inOutExpoTo = function(t, b, e, d) return inOutExpo(t, b, e-b, d) end,
+  outInExpoTo = function(t, b, e, d) return outInExpo(t, b, e-b, d) end,
+  inCircTo = function(t, b, e, d) return inCirc(t, b, e-b, d) end,
+  outCircTo = function(t, b, e, d) return outCirc(t, b, e-b, d) end,
+  inOutCircTo = function(t, b, e, d) return inOutCirc(t, b, e-b, d) end,
+  outInCircTo = function(t, b, e, d) return outInCirc(t, b, e-b, d) end,
+  inElasticTo = function(t, b, e, d, a, p) return inElastic(t, b, e-b, d, a, p) end,
+  outElasticTo = function(t, b, e, d, a, p) return outElastic(t, b, e-b, d, a, p) end,
+  inOutElasticTo = function(t, b, e, d, a, p) return inOutElastic(t, b, e-b, d, a, p) end,
+  outInElasticTo = function(t, b, e, d, a, p) return outInElastic(t, b, e-b, d, a, p) end,
+  inBackTo = function(t, b, e, d, s) return inBack(t, b, e-b, d, s) end,
+  outBackTo = function(t, b, e, d, s) return outBack(t, b, e-b, d, s) end,
+  inOutBackTo = function(t, b, e, d, s) return inOutBack(t, b, e-b, d, s) end,
+  outInBackTo = function(t, b, e, d, s) return outInBack(t, b, e-b, d, s) end,
+  inBounceTo = function(t, b, e, d) return inBounce(t, b, e-b, d) end,
+  outBounceTo = function(t, b, e, d) return outBounce(t, b, e-b, d) end,
+  inOutBounceTo = function(t, b, e, d) return inOutBounce(t, b, e-b, d) end,
+  outInBounceTo = function(t, b, e, d) return outInBounce(t, b, e-b, d) end,
+  oscillate = oscillate,
+  getCoordFun = getCoordFun
 }
